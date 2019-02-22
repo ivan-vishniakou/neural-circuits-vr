@@ -8,14 +8,17 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{B92CA0E4-DBB9-4D92-BB77-B107AF501376}"
 	ProjectSection(SolutionItems) = preProject
 		src\BallTracking.cpp = src\BallTracking.cpp
+		src\ImageAcquisition.cpp = src\ImageAcquisition.cpp
 		src\stdafx.cpp = src\stdafx.cpp
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "include", "include", "{79A03750-D8D7-4F07-AA33-AD2530159E52}"
 	ProjectSection(SolutionItems) = preProject
+		include\ApplicationSettings.h = include\ApplicationSettings.h
 		include\BallTracking.h = include\BallTracking.h
 		include\ConcurrentQueue.h = include\ConcurrentQueue.h
 		include\stdafx.h = include\stdafx.h
+		include\ImageAcquisition.h = include\ImageAcquisition.h
 	EndProjectSection
 EndProject
 Global
