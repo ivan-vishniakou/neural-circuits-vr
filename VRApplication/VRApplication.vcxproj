@@ -77,6 +77,7 @@
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(SolutionDir)\include;$(IncludePath)</IncludePath>
     <SourcePath>$(SolutionDir)\src;$(SourcePath)</SourcePath>
+    <OutDir>$(SolutionDir)CaesarVR\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -85,6 +86,7 @@
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(SolutionDir)\include;$(IncludePath)</IncludePath>
     <SourcePath>$(SolutionDir)\src;$(SourcePath)</SourcePath>
+    <OutDir>$(SolutionDir)CaesarVR\$(Configuration)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -108,14 +110,20 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(PYLON_DEV_DIR)\include;$(OPENCV_DIR)\build\include;$(BOOST_DIR);$(URHO3D_DIR);$(SPDLOG_DIR)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(PYLON_DEV_DIR)\include;$(OPENCV_DIR)\build\include;$(BOOST_DIR);$(URHO3D_DIR)\include;$(URHO3D_DIR)\include\Urho3D\ThirdParty;$(SPDLOG_DIR)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(PYLON_DEV_DIR)\lib\x64;$(BOOST_DIR)\lib64-msvc-14.1</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(PYLON_DEV_DIR)\lib\x64;$(BOOST_DIR)\lib64-msvc-14.1;$(URHO3D_DIR)\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Urho3D.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy "$(SolutionDir)config" "$(SolutionDir)CaesarVR\$(Configuration)\config" /Y /I /E
+xcopy "$(URHO3D_DIR)\bin\Urho3D.dll" "$(SolutionDir)CaesarVR\$(Configuration)" /Y /I
+</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -145,7 +153,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(PYLON_DEV_DIR)\include;$(OPENCV_DIR)\build\include;$(BOOST_DIR);$(URHO3D_DIR);$(SPDLOG_DIR)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(PYLON_DEV_DIR)\include;$(OPENCV_DIR)\build\include;$(BOOST_DIR);$(URHO3D_DIR)\include;$(URHO3D_DIR)\include\Urho3D\ThirdParty;$(SPDLOG_DIR)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
@@ -153,8 +161,14 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(PYLON_DEV_DIR)\lib\x64;$(BOOST_DIR)\lib64-msvc-14.1</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(PYLON_DEV_DIR)\lib\x64;$(BOOST_DIR)\lib64-msvc-14.1;$(URHO3D_DIR)\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Urho3D.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy "$(SolutionDir)config" "$(SolutionDir)CaesarVR\$(Configuration)\config" /Y /I /E
+xcopy "$(URHO3D_DIR)\bin\Urho3D.dll" "$(SolutionDir)CaesarVR\$(Configuration)" /Y /I
+</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="targetver.h" />
