@@ -1,22 +1,19 @@
-#include "BallTracking.h"
-//#include <opencv2/opencv.hpp>
-//#include <opencv2/highgui/highgui.hpp>
-//#include <chrono>
+#pragma once
+#include <stdafx.h>
+#include <BallTracking.h>
+#include <ApplicationSettings.h>
 
-BallTracking::BallTracking(IConcurrentQueue* pResultQueue, bool enable_visualize = false, int mode = RotModel::MODE_TRACKING) :
+BallTracking::BallTracking(bool enable_visualize = false, int mode = RotModel::MODE_TRACKING) :
 	parameters(),
 	pDhSolver(cv::DownhillSolver::create()),
 	prevFit(),
 	pRotModel(new RotModel(mode))
 {
-	ApplicationSettings& load_settings = ApplicationSettings::getInstance();
-
 	visualize = enable_visualize;
-	pResultOutputQueue = pResultQueue;
-
 	/*
 	Loading settings from config file
 	*/
+	/*
 	parameters.polarCenter.x = load_settings.pt.get<float>("tracking settings.ball_center_x");
 	parameters.polarCenter.y = load_settings.pt.get<float>("tracking settings.ball_center_y");
 	parameters.visibleBallRadius = load_settings.pt.get<float>("tracking settings.ball_radius");
@@ -24,7 +21,7 @@ BallTracking::BallTracking(IConcurrentQueue* pResultQueue, bool enable_visualize
 	parameters.calibrCXYrad = load_settings.pt.get<float>("tracking settings.c_xy_rad");
 	parameters.calibrCXYtan = load_settings.pt.get<float>("tracking settings.c_xy_tan");
 	parameters.calibrCZ = load_settings.pt.get<float>("tracking settings.c_z");
-
+	*/
 	/*
 	Setting up solver and its model
 	*/
@@ -40,7 +37,7 @@ BallTracking::BallTracking(IConcurrentQueue* pResultQueue, bool enable_visualize
 }
 
 
-float BallTracking::update(const cv::Mat& frame)
+cv::Mat BallTracking::update(const cv::Mat& frame)
 {
 	try
 	{
@@ -67,8 +64,8 @@ float BallTracking::update(const cv::Mat& frame)
 			debugPlot = cv::Mat(cv::Size(currentFrame.rows, 100), CV_8UC3);
 			debugPlot.setTo(0);
 
-			((TrackingQueue*)pResultOutputQueue)->push(cv::Vec3f(0, 0, 0));
-			return 0.0;
+			//((TrackingQueue*)pResultOutputQueue)->push(cv::Vec3f(0, 0, 0));
+			return prevFit;
 		}
 		else
 		{
@@ -76,7 +73,7 @@ float BallTracking::update(const cv::Mat& frame)
 			cv::calcOpticalFlowFarneback(prevFrame, currentFrame, flow, 0.5, 2, 6, 2, 2, 1.7, 0);
 
 			// average along radius in the ROI
-			cv::reduce(flow.colRange(parameters.roiDownscaledRhoMin, parameters.roiDownscaledRhoMax), flow, 1, CV_REDUCE_AVG);
+			cv::reduce(flow.colRange(parameters.roiDownscaledRhoMin, parameters.roiDownscaledRhoMax), flow, 1, cv::ReduceTypes::REDUCE_AVG);
 			cv::Mat uv[2];
 			cv::split(flow, uv);
 			uv[0] *= parameters.calibrCXYtan / parameters.calibrCXYrad;
@@ -86,7 +83,7 @@ float BallTracking::update(const cv::Mat& frame)
 			// fit function using previous result as initial guess, returns MSE
 			double res = pDhSolver->minimize(prevFit) / (float)currentFrame.rows;
 			//prevFit is [amplitude, phase, offset_tan]
-
+			/*
 			debugPlot.setTo(0);
 			for (int i = 0; i < 140; i++) {
 				int y = (int)(50 - std::round(uv[0].at<float>(i, 0) * 20));
@@ -112,7 +109,7 @@ float BallTracking::update(const cv::Mat& frame)
 
 			}
 			//cv::imshow("debug", debugPlot);
-
+			*/
 
 			cv::Point3f dir(
 				std::cos(prevFit.at<double>(1)) * prevFit.at<double>(0) / parameters.calibrCXYtan,		// * 180 / 3.14,  //converts to degrees
@@ -130,22 +127,21 @@ float BallTracking::update(const cv::Mat& frame)
 				// this outlines the tracking ROI
 				cv::circle(frame, parameters.polarCenter, parameters.visibleBallRadius*(parameters.roiRhoMin + parameters.roiDownscaledRhoMin*(parameters.roiRhoMax - parameters.roiRhoMin) / parameters.roiDownscaledWidth) / frame.size().width, cv::Scalar(256));
 				cv::circle(frame, parameters.polarCenter, parameters.visibleBallRadius*(parameters.roiRhoMin + parameters.roiDownscaledRhoMax*(parameters.roiRhoMax - parameters.roiRhoMin) / parameters.roiDownscaledWidth) / frame.size().width, cv::Scalar(256));
-
 				cv::line(frame, parameters.polarCenter, parameters.polarCenter + cv::Point2f(-dir.y, dir.x) * 3000, cv::Scalar(0));
 			}
 
-			((TrackingQueue*)pResultOutputQueue)->push(dir);
+			//((TrackingQueue*)pResultOutputQueue)->push(dir);
 			//std::cout << dir << " - " << cv::norm(dir) << std::endl;
 			//std::cout << prevFit.at<double>(0)/ prevFit.at<double>(1) << std::endl;
 
 			prevFrame = currentFrame;
-			return res;
+			return prevFit;
 		}
 	}
 	catch (const cv::Exception &e) {
-		std::cout << e.msg << std::endl;
+		std::cout << e.what() << std::endl;
 	}
-	return 999.0; //error
+	return prevFit; //error
 }
 
 

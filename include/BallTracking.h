@@ -5,7 +5,7 @@
 //#include <iostream>
 //#include <string>
 //#include "spdlog/spdlog.h"
-#include <ConcurrentQueue.h>
+//#include <ConcurrentQueue.h>
 //#include <omp.h>
 //#include <boost/lockfree/queue.hpp>
 
@@ -105,11 +105,10 @@ private:
 	bool visualize;
 	cv::Ptr<cv::DownhillSolver> pDhSolver;
 	cv::Ptr<RotModel> pRotModel;
-	IConcurrentQueue* pResultOutputQueue;
 public:
-	BallTracking(IConcurrentQueue* pResultQueue, bool enableVisualize, int mode);
+	BallTracking(bool enableVisualize, int mode);
 	BallTrackingParameters parameters;
 	cv::Mat debugPlot;
-	float update(const cv::Mat& frame);
+	cv::Mat update(const cv::Mat& frame);
 	~BallTracking();
 };
