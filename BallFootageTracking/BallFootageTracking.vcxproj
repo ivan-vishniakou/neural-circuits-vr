@@ -74,6 +74,7 @@
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(SolutionDir)\include;$(IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
     <SourcePath>$(VC_SourcePath);$(SolutionDir)\src;$(SourcePath)</SourcePath>
+    <OutDir>$(SolutionDir)CaesarVR\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
@@ -82,6 +83,7 @@
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(SolutionDir)\include;$(IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
     <SourcePath>$(VC_SourcePath);$(SolutionDir)\src;$(SourcePath)</SourcePath>
+    <OutDir>$(SolutionDir)CaesarVR\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -106,6 +108,9 @@
       <AdditionalLibraryDirectories>$(PYLON_DEV_DIR)\lib\x64;$(BOOST_DIR)\lib64-msvc-14.1;$(OPENCV_DIR)\build\x64\vc15\lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>opencv_world401.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy "$(SolutionDir)config" "$(SolutionDir)CaesarVR\$(Configuration)\config" /Y /I /E</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -137,6 +142,9 @@
       <AdditionalLibraryDirectories>$(PYLON_DEV_DIR)\lib\x64;$(BOOST_DIR)\lib64-msvc-14.1;$(OPENCV_DIR)\build\x64\vc15\lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>opencv_world401d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy "$(SolutionDir)config" "$(SolutionDir)CaesarVR\$(Configuration)\config" /Y /I /E</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
