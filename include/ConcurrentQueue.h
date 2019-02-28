@@ -1,8 +1,12 @@
 #pragma once
 
+#include "stdafx.h"
+
 /*Adopted from
 https://www.justsoftwaresolutions.co.uk/threading/implementing-a-thread-safe-queue-using-condition-variables.html
 */
+
+
 
 
 class IConcurrentQueue {
@@ -62,3 +66,7 @@ public:
 	}
 
 };
+
+
+typedef ConcurrentQueue<cv::Vec3f> TrackingQueue;		//used in tracking
+typedef ConcurrentQueue<cv::Vec4f> CalibrationQueue;	//used in calibration
