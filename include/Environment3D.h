@@ -1,7 +1,7 @@
 #pragma once
 
 #include "stdafx.h"
-#include <ConcurrentQueue.h>
+#include "ConcurrentQueue.h"
 
 using namespace Urho3D;
 

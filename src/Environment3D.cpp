@@ -1,8 +1,9 @@
 #pragma once
 
-#include <stdafx.h>
-#include <Environment3D.h>
-
+#include "stdafx.h"
+#include "Environment3D.h"
+#include "ConfigFile.h"
+#include "ConfigManager.h"
 
 using namespace Urho3D;
 

@@ -176,6 +176,12 @@ xcopy "$(SolutionDir)Data\*" "$(SolutionDir)CaesarVR\$(Configuration)\Data" /Y /
     <ClCompile Include="..\src\BallTracking.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="..\src\ConfigFile.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\src\ConfigManager.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="..\src\Environment3D.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
     </ClCompile>
@@ -186,6 +192,8 @@ xcopy "$(SolutionDir)Data\*" "$(SolutionDir)CaesarVR\$(Configuration)\Data" /Y /
     <ClInclude Include="..\include\ApplicationSettings.h" />
     <ClInclude Include="..\include\BallTracking.h" />
     <ClInclude Include="..\include\ConcurrentQueue.h" />
+    <ClInclude Include="..\include\ConfigFile.h" />
+    <ClInclude Include="..\include\ConfigManager.h" />
     <ClInclude Include="..\include\Environment3D.h" />
     <ClInclude Include="..\include\ImageAcquisition.h" />
     <ClInclude Include="..\include\stdafx.h" />
