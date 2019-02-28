@@ -1,0 +1,6 @@
+<material>
+    <technique name="Techniques/Diff.xml" />
+    <texture unit="diffuse" name="Textures/texblack.png" />
+    <texture unit="normal" name="Textures/texblack.png" />
+    <parameter name="MatSpecColor" value="0.1 0.1 0.1 16" />
+</material>
