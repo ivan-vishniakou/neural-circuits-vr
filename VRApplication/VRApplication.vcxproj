@@ -87,6 +87,7 @@
     <IncludePath>$(SolutionDir)\include;$(IncludePath)</IncludePath>
     <SourcePath>$(SolutionDir)\src;$(SourcePath)</SourcePath>
     <OutDir>$(SolutionDir)CaesarVR\$(Configuration)\</OutDir>
+    <PreBuildEventUseInBuild>true</PreBuildEventUseInBuild>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -171,6 +172,10 @@ xcopy "$(URHO3D_DIR)\share\Resources\Data\*" "$(SolutionDir)CaesarVR\$(Configura
 xcopy "$(URHO3D_DIR)\share\Resources\CoreData\*" "$(SolutionDir)CaesarVR\$(Configuration)\CoreData" /Y /I /E
 xcopy "$(SolutionDir)Data\*" "$(SolutionDir)CaesarVR\$(Configuration)\Data" /Y /I /E</Command>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>
+      </Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\src\BallTracking.cpp">

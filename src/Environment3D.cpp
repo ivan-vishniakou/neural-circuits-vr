@@ -7,7 +7,7 @@
 
 using namespace Urho3D;
 
-Environment3D::Environment3D(Context * context) : Application(context), framecount_(0), time_(0), absolutePose(0, 0, 0), ballXYZtoArenaXYZ_(Matrix3::IDENTITY), ballXYZtoArenaYaw_(Vector3::FORWARD)
+Environment3D::Environment3D(Context * context) : Application(context), framecount_(0), time_(0), absolutePose(0, 0, 0), ballXYZtoArenaXYZ_(Matrix3::ZERO), ballXYZtoArenaYaw_(Vector3::FORWARD)
 {
 	//arena_period = 30;
 }
@@ -19,25 +19,30 @@ void Environment3D::Setup()
 	// See http://urho3d.github.io/documentation/1.5/_main_loop.html
 	// for a more complete list.
 
-	/*
-	engineParameters_["FullScreen"] = true;
-	engineParameters_["WindowWidth"] = 1920;
-	engineParameters_["WindowHeight"] = 1080;
-	engineParameters_["WindowResizable"] = false;
-	engineParameters_["Borderless"] = true;
-	engineParameters_["WindowPositionX"] = 1920;
-	engineParameters_["WindowPositionY"] = 0;
-	engineParameters_["FullScreen"] = false;
-	engineParameters_["VSync"] = false;
-	/*/
-	engineParameters_["WindowWidth"] = 1920 / 2;
-	engineParameters_["WindowHeight"] = 1080 / 2;
-	engineParameters_["WindowPositionX"] = 0;
-	engineParameters_["WindowPositionY"] = 0;
-	engineParameters_["WindowResizable"] = false;
-	engineParameters_["FullScreen"] = false;
-	//*/
-}
+	ConfigFile::RegisterObject(context_);
+	ConfigManager::RegisterObject(context_);
+
+	String configurationFile = GetSubsystem<FileSystem>()->GetProgramDir() + "/Data/Config/vr.cfg";
+	ConfigManager* configManager = new ConfigManager(context_, configurationFile);
+	context_->RegisterSubsystem(configManager);
+	
+	// Load from config file
+	engineParameters_["FullScreen"] = GetSubsystem<ConfigManager>()->GetBool("engine", "FullScreen", false);
+	engineParameters_["WindowWidth"] = GetSubsystem<ConfigManager>()->GetUInt("engine", "WindowWidth", 1920/2);
+	engineParameters_["WindowHeight"] = GetSubsystem<ConfigManager>()->GetUInt("engine", "WindowHeight", 1080/2);
+	engineParameters_["WindowPositionX"] = GetSubsystem<ConfigManager>()->GetUInt("engine", "WindowPositionX", 1000);
+	engineParameters_["WindowPositionY"] = GetSubsystem<ConfigManager>()->GetUInt("engine", "WindowPositionY", 50);
+	engineParameters_["WindowResizable"] = GetSubsystem<ConfigManager>()->GetBool("engine", "WindowResizable", false);
+	engineParameters_["Borderless"] = GetSubsystem<ConfigManager>()->GetBool("engine", "Borderless", false);
+	engineParameters_["VSync"] = GetSubsystem<ConfigManager>()->GetBool("engine", "VSync", false);
+
+	engine_->SetMinFps(GetSubsystem<ConfigManager>()->GetUInt("engine", "minFps", 120));
+	engine_->SetMaxFps(GetSubsystem<ConfigManager>()->GetUInt("engine", "maxFps", 240));
+	engine_->SetMaxInactiveFps(GetSubsystem<ConfigManager>()->GetUInt("engine", "maxInactiveFps", 240));
+
+	ballXYZtoArenaXYZ_ = GetSubsystem<ConfigManager>()->GetMatrix3("transforms", "ballXYZtoArenaXYZ", Matrix3::ZERO);
+	ballXYZtoArenaYaw_ = GetSubsystem<ConfigManager>()->GetVector3("transforms", "ballXYZtoArenaYaw", Vector3::FORWARD);
+}  
 
 
 void Environment3D::Configure(char * startupScriptPath, int * controlFlags, TrackingQueue * trackingQueue) {
@@ -126,71 +131,15 @@ void Environment3D::HandleKeyDown(StringHash eventType, VariantMap& eventData)
 */
 void  Environment3D::HandleUpdate(StringHash eventType, VariantMap& eventData)
 {
-	/*
+	
 	float timeStep = eventData[Update::P_TIMESTEP].GetFloat();
-	framecount_++;
-	time_ += timeStep;
-	timeStep = 0.005;
+	//framecount_++;
+	//time_ += timeStep;
+	//timeStep = 0.005;
 	// Movement speed as world units per second
 	float MOVE_SPEED = 10.0f;
 	// Mouse sensitivity as degrees per pixel
 	const float MOUSE_SENSITIVITY = 0.1f;
-
-	if (time_ >= 1)
-	{
-		std::string str;
-		str.append(" ");
-		//str.append("Keys: tab = toggle mouse, AWSD = move camera, Shift = fast mode, Esc = quit.\n");
-		{
-			std::ostringstream ss;
-			ss << framecount_;
-			std::string s(ss.str());
-			str.append(s.substr(0, 6));
-		}
-		str.append(" frames in ");
-		{
-			std::ostringstream ss;
-			ss << time_;
-			std::string s(ss.str());
-			str.append(s.substr(0, 6));
-		}
-		str.append(" seconds = ");
-		{
-			std::ostringstream ss;
-			ss << (float)framecount_ / time_;
-			std::string s(ss.str());
-			str.append(s.substr(0, 6));
-		}
-		str.append(" fps");
-
-		str.append("\n CAM X = ");
-		{
-			std::ostringstream ss;
-			ss << cameraNode_->GetPosition().x_;
-			std::string s(ss.str());
-			str.append(s.substr(0, 6));
-		}
-		str.append("\n CAM Y = ");
-		{
-			std::ostringstream ss;
-			ss << cameraNode_->GetPosition().y_;
-			std::string s(ss.str());
-			str.append(s.substr(0, 6));
-		}
-		str.append("\n CAM Z = ");
-		{
-			std::ostringstream ss;
-			ss << cameraNode_->GetPosition().z_;
-			std::string s(ss.str());
-			str.append(s.substr(0, 6));
-		}
-
-		String s(str.c_str(), str.size());
-		text_->SetText(s);
-		URHO3D_LOGINFO(s);     // this show how to put stuff into the log
-		framecount_ = 0;
-		time_ = 0;
-	}
 
 	Input* input = GetSubsystem<Input>();
 

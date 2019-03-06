@@ -28,12 +28,12 @@ void SetupViewports(Scene scene, Vector3 initialPosition, Quaternion initialOrie
     The collision shape and rigid body components are needed to processing
     Collisions with other colliding objects. A sphere around the subject is used
     */
-    //RigidBody@ rigidBody = subjectNode.CreateComponent("RigidBody");
-    //rigidBody.mass = 1.0;
-    //rigidBody.collisionLayer = 1;
-    //CollisionShape@ collider = subjectNode.CreateComponent("CollisionShape");
-    //collider.SetBox(Vector3(0.4f,0.4f,0.4f));
-    //SubscribeToEvent(subjectNode, "NodeCollision", "HandleNodeCollision");
+    RigidBody@ rigidBody = subjectNode.CreateComponent("RigidBody");
+    rigidBody.mass = 1.0;
+    rigidBody.collisionLayer = 1;
+    CollisionShape@ collider = subjectNode.CreateComponent("CollisionShape");
+    collider.SetBox(Vector3(1.4f,0.4f,1.4f));
+    SubscribeToEvent(subjectNode, "NodeCollision", "HandleNodeCollision");
 
     Node@ cam1 = subjectNode.CreateChild("Camera_1");
     Node@ cam2 = subjectNode.CreateChild("Camera_2");
