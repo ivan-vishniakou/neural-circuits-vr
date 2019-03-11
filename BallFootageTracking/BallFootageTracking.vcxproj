@@ -99,6 +99,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(PYLON_DEV_DIR)\include;$(OPENCV_DIR)\build\include;$(BOOST_DIR);$(URHO3D_DIR)\include\Urho3D\ThirdParty;$(URHO3D_DIR)\include;$(SPDLOG_DIR)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OpenMPSupport>true</OpenMPSupport>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

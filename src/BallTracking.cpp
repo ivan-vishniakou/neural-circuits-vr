@@ -31,7 +31,7 @@ BallTracking::BallTracking(bool enable_visualize = false, int mode = RotModel::M
 	pDhSolver->setInitStep(step);
 	pDhSolver->setFunction(pRotModel);
 	pDhSolver->setTermCriteria(cv::TermCriteria(cv::TermCriteria::EPS + cv::TermCriteria::MAX_ITER, 100, 0.001));
-
+	//cv::setNumThreads(10);
 	std::cout << "Threads: " << cv::getNumThreads()
 		<< ", CPUs: " << cv::getNumberOfCPUs() << std::endl;
 }
@@ -70,8 +70,10 @@ cv::Mat BallTracking::update(const cv::Mat& frame)
 		else
 		{
 			cv::Mat flow(prevFrame.size(), CV_32FC2);
+			flow.setTo(0.0);
 			cv::calcOpticalFlowFarneback(prevFrame, currentFrame, flow, 0.5, 2, 6, 2, 2, 1.7, 0);
-
+			//disOpticalFlow->calc(prevFrame, currentFrame, flow);
+			//std::cout << flow.rows << "  " << flow.cols << std::endl;
 			// average along radius in the ROI
 			cv::reduce(flow.colRange(parameters.roiDownscaledRhoMin, parameters.roiDownscaledRhoMax), flow, 1, cv::ReduceTypes::REDUCE_AVG);
 			cv::Mat uv[2];
@@ -83,33 +85,35 @@ cv::Mat BallTracking::update(const cv::Mat& frame)
 			// fit function using previous result as initial guess, returns MSE
 			double res = pDhSolver->minimize(prevFit) / (float)currentFrame.rows;
 			//prevFit is [amplitude, phase, offset_tan]
-			/*
+			
 			debugPlot.setTo(0);
-			for (int i = 0; i < 140; i++) {
-				int y = (int)(50 - std::round(uv[0].at<float>(i, 0) * 20));
-				y = std::max(0, y);
-				debugPlot.at<cv::Vec3b>(y % 100, i) = cv::Vec3b(0, 0, 255);
+			if (pRotModel->mode == RotModel::MODE_TRACKING) {
+				for (int i = 0; i < 140; i++) {
+					int y = (int)(50 - std::round(uv[0].at<float>(i, 0) * 20));
+					y = std::max(0, y);
+					debugPlot.at<cv::Vec3b>(y % 100, i) = cv::Vec3b(0, 0, 255);
 
-				y = (int)(50 - std::round(uv[1].at<float>(i, 0) * 20));
-				y = std::max(0, y);
-				debugPlot.at<cv::Vec3b>(y % 100, i) = cv::Vec3b(255, 0, 0);
+					y = (int)(50 - std::round(uv[1].at<float>(i, 0) * 20));
+					y = std::max(0, y);
+					debugPlot.at<cv::Vec3b>(y % 100, i) = cv::Vec3b(255, 0, 0);
 
-				y = (int)std::round(
-					(50 - std::sin(2 * 3.1415 / 140.0*(float)i + prevFit.at<double>(1))*prevFit.at<double>(0) * 20)
-				);
-				y = std::max(0, y);
-				debugPlot.at<cv::Vec3b>(y % 100, i) = cv::Vec3b(64, 64, 255);
+					y = (int)std::round(
+						(50 - std::sin(2 * 3.1415 / 140.0*(float)i + prevFit.at<double>(1))*prevFit.at<double>(0) * 20)
+					);
+					y = std::max(0, y);
+					debugPlot.at<cv::Vec3b>(y % 100, i) = cv::Vec3b(64, 64, 255);
 
-				//[amplitude_rad, amplitude_tan, offset_tan, phase]
-				y = (int)std::round(
-					(50 - (std::cos(2 * 3.1415 / 140.0*(float)i + prevFit.at<double>(1))*prevFit.at<double>(0) + prevFit.at<double>(2)) * 20)
-				);
-				y = std::max(0, y);
-				debugPlot.at<cv::Vec3b>(y % 100, i) = cv::Vec3b(255, 64, 64);
+					//[amplitude_rad, amplitude_tan, offset_tan, phase]
+					y = (int)std::round(
+						(50 - (std::cos(2 * 3.1415 / 140.0*(float)i + prevFit.at<double>(1))*prevFit.at<double>(0) + prevFit.at<double>(2)) * 20)
+					);
+					y = std::max(0, y);
+					debugPlot.at<cv::Vec3b>(y % 100, i) = cv::Vec3b(255, 64, 64);
 
-			}
+				}
+			} else
 			//cv::imshow("debug", debugPlot);
-			*/
+			
 
 			cv::Point3f dir(
 				std::cos(prevFit.at<double>(1)) * prevFit.at<double>(0) / parameters.calibrCXYtan,		// * 180 / 3.14,  //converts to degrees

@@ -36,7 +36,7 @@ public:
 		float res = 0.0;
 
 		if (mode == MODE_TRACKING) {
-#pragma omp parallel for
+#pragma omp parallel for// reduction(+ : res)
 			for (int i = 0; i < nPoints; i++) {
 				float r = pow(
 					radialFlow.at<float>(i) - (x[0] * sin(i*freq + x[1])),
@@ -53,7 +53,7 @@ public:
 		x = [amplitude_rad, amplitude_tan, offset_tan, phase ]
 		*/
 		else {
-#pragma omp parallel for
+#pragma omp parallel for// reduction(+ : res)
 			for (int i = 0; i < nPoints; i++) {
 				float r = pow(
 					radialFlow.at<float>(0, i) - (x[0] * sin(i*freq + x[3])),
