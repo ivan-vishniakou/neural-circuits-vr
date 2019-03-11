@@ -121,9 +121,11 @@
       <AdditionalDependencies>Urho3D.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy "$(SolutionDir)config" "$(SolutionDir)CaesarVR\$(Configuration)\config" /Y /I /E
+      <Command>xcopy "$(SolutionDir)Config" "$(SolutionDir)CaesarVR\$(Configuration)\Config" /Y /I /E
 xcopy "$(URHO3D_DIR)\bin\Urho3D.dll" "$(SolutionDir)CaesarVR\$(Configuration)" /Y /I
-</Command>
+xcopy "$(URHO3D_DIR)\share\Resources\Data\*" "$(SolutionDir)CaesarVR\$(Configuration)\Data" /Y /I /E
+xcopy "$(URHO3D_DIR)\share\Resources\CoreData\*" "$(SolutionDir)CaesarVR\$(Configuration)\CoreData" /Y /I /E
+xcopy "$(SolutionDir)Data\*" "$(SolutionDir)CaesarVR\$(Configuration)\Data" /Y /I /E</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -166,7 +168,7 @@ xcopy "$(URHO3D_DIR)\bin\Urho3D.dll" "$(SolutionDir)CaesarVR\$(Configuration)" /
       <AdditionalDependencies>opencv_world401.lib;Urho3D.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy "$(SolutionDir)config" "$(SolutionDir)CaesarVR\$(Configuration)\config" /Y /I /E
+      <Command>xcopy "$(SolutionDir)Config" "$(SolutionDir)CaesarVR\$(Configuration)\Config" /Y /I /E
 xcopy "$(URHO3D_DIR)\bin\Urho3D.dll" "$(SolutionDir)CaesarVR\$(Configuration)" /Y /I
 xcopy "$(URHO3D_DIR)\share\Resources\Data\*" "$(SolutionDir)CaesarVR\$(Configuration)\Data" /Y /I /E
 xcopy "$(URHO3D_DIR)\share\Resources\CoreData\*" "$(SolutionDir)CaesarVR\$(Configuration)\CoreData" /Y /I /E

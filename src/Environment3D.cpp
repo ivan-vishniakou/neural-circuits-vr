@@ -22,7 +22,7 @@ void Environment3D::Setup()
 	ConfigFile::RegisterObject(context_);
 	ConfigManager::RegisterObject(context_);
 
-	String configurationFile = GetSubsystem<FileSystem>()->GetProgramDir() + "/Data/Config/vr.cfg";
+	String configurationFile = GetSubsystem<FileSystem>()->GetProgramDir() + "/Config/vr.cfg";
 	ConfigManager* configManager = new ConfigManager(context_, configurationFile);
 	context_->RegisterSubsystem(configManager);
 	

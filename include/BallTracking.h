@@ -12,7 +12,6 @@
 
 class RotModel : public cv::MinProblemSolver::Function {
 private:
-	int mode;
 	cv::Mat radialFlow;
 	cv::Mat tangenFlow;
 
@@ -21,6 +20,7 @@ private:
 	float ampRatio; //radialFlowAmplitude = ampRatio*tangenFlow;
 
 public:
+	int mode;
 	static const int MODE_TRACKING = 3;
 	static const int MODE_CALIBRATION = 4;
 
@@ -91,7 +91,7 @@ struct BallTrackingParameters {
 	uint roiDownscaledRhoMin = 2;	//px
 	uint roiDownscaledRhoMax = 13;	//px
 
-	float calibrCXYrad = 100.31;		//px/rad
+	float calibrCXYrad = 100.31;	//px/rad
 	float calibrCXYtan = 76.85;		//px/rad
 	float calibrCZ = 20.63;			//px/rad
 };

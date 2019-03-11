@@ -120,7 +120,7 @@ cv::Mat BallTracking::update(const cv::Mat& frame)
 				-std::sin(prevFit.at<double>(1)) * prevFit.at<double>(0) / parameters.calibrCXYtan,		// * 180 / 3.14,
 				prevFit.at<double>(2) / parameters.calibrCZ		//*180/3.14
 			);
-
+			/*
 			if (visualize) {
 
 				// this outlines the optical flow ROI
@@ -133,7 +133,7 @@ cv::Mat BallTracking::update(const cv::Mat& frame)
 				cv::circle(frame, parameters.polarCenter, parameters.visibleBallRadius*(parameters.roiRhoMin + parameters.roiDownscaledRhoMax*(parameters.roiRhoMax - parameters.roiRhoMin) / parameters.roiDownscaledWidth) / frame.size().width, cv::Scalar(256));
 				cv::line(frame, parameters.polarCenter, parameters.polarCenter + cv::Point2f(-dir.y, dir.x) * 3000, cv::Scalar(0));
 			}
-
+			*/
 			//((TrackingQueue*)pResultOutputQueue)->push(dir);
 			//std::cout << dir << " - " << cv::norm(dir) << std::endl;
 			//std::cout << prevFit.at<double>(0)/ prevFit.at<double>(1) << std::endl;
