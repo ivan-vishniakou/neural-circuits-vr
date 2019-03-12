@@ -6,18 +6,20 @@ class Arena : ScriptObject {
     float turningGain = 1.0f;    // Gain parameters for turning
     float walkingGain = 1.0f;    // And walking motion
 
-    Vector3 initialPosition = Vector3(0.0f, 0.5f, 0.0f);
-    Quaternion initialOrientation = Quaternion(0.0f, Vector3(0.0f, 1.0f, 0.0f));
+    Vector3 initialPosition = Vector3(0.0f, 0.5f, 0.0f);  // initial position
+    Quaternion initialOrientation = Quaternion(           // and orientation
+        0.0f, Vector3(0.0f, 1.0f, 0.0f)                   // in the virtual
+    );                                                    // environment.
+
+    Node@ _subjectNode;    // Keeping a reference to the subject to access
+                          // its location etc...
 
     void Start() {
+        /*  This function is called on the startup of the arena.
+            All arena objects are to be created here, events subscribed,
+        */  etc.
         Print("Creating stripe arena");
 
-        /* Octree component is needed for scene functioning;
-        //   without it the scene is not rendered             */
-        scene.CreateComponent("Octree");
-
-        /* Physics world is needed when you want to detect and handle collisions
-        // can be commented out when collider shapes are not used */
         scene.CreateComponent("DebugRenderer");
 
         // The zone setting illumination/fog properties
@@ -25,7 +27,7 @@ class Arena : ScriptObject {
         Node@ zoneNode = scene.CreateChild("Zone");
         Zone@ zone = zoneNode.CreateComponent("Zone");
         zone.boundingBox = BoundingBox(-1000.0f, 1000.0f);
-        zone.fogColor = Color(1.0f,1.0f,1.0f);                                  //0.0f,0.0f,0.0f
+        zone.fogColor = Color(1.0f,1.0f,1.0f);             //0.0f,0.0f,0.0f
         zone.ambientColor = Color(1.0f, 1.0f, 1.0f);
         zone.fogStart = 1000.0f;
         zone.fogEnd = 1000.0f;
@@ -43,43 +45,52 @@ class Arena : ScriptObject {
         object.model = cache.GetResource("Model", "Models/Cylinder.mdl");
         object.material = cache.GetResource("Material", "Materials/Black.xml");   //White.xml
 
-        rigidBody = node.CreateComponent("RigidBody");
-        //rigidBody.mass = 1.0;
-        rigidBody.collisionLayer = 1;
-        collider = node.CreateComponent("CollisionShape");
-        collider.SetCylinder(1.1, 1);
+        rigidBody = node.CreateComponent("RigidBody");      // Rigid body and
+        rigidBody.collisionLayer = 1;                       // Collision shape
+        collider = node.CreateComponent("CollisionShape");  // are  both needed
+        collider.SetCylinder(1.1, 1);                       // for physics simulation
+                                                            // by Urho3D
 
 
         // Call this function common for all the arenas in the same VR setting
         // to configure screens.
-        SetupViewports(
+        _subjectNode = SetupViewports(
             scene,                        // reference to the scene,
             initialPosition,              // initial position and
             initialOrientation            // orientation in the VR.
         );
+
+        // Subscribe to collision events of the subject node.
+        SubscribeToEvent(_subjectNode, "NodeCollision", "HandleNodeCollision");
     }
+
+
+    void HandleNodeCollision(StringHash eventType, VariantMap& eventData)
+    {
+        Print("collision");
+        /*
+        VectorBuffer contacts = eventData["Contacts"].GetBuffer();
+        while (!contacts.eof)
+        {
+            Vector3 contactPosition = contacts.ReadVector3();
+            Vector3 contactNormal = contacts.ReadVector3();
+            float contactDistance = contacts.ReadFloat();
+            float contactImpulse = contacts.ReadFloat();
+
+            // If contact is below node center and mostly vertical, assume it's a ground contact
+            if (contactPosition.y < (node.position.y + 1.0f))
+            {
+                float level = Abs(contactNormal.y);
+                if (level > 0.75)
+                    onGround = true;
+            }
+        }*/
+    }
+
 
     void PostUpdate(float timeStep)
     {
-      Node@ cam = scene.GetChild("Subject");
-      cam.position = Vector3(cam.position.x, 0.5, cam.position.z);
-      /*
-      //Print(cam.rotation.yaw);
-      if (cam.rotation.yaw>146) {
-        Print(cam.rotation.yaw);
-        cam.Rotate(Quaternion(10.0f, 100.0f, +100.0f));
-        Print(cam.rotation.yaw);
-      }
-      if (cam.rotation.yaw<-146) {
-        cam.rotation = Quaternion(0.0f, 0.0f, 0.0f);
-      }
-      //RigidBody@ rb = cam.GetComponent("RigidBody");
-      //rb.ApplyForce(Vector3(0.0f, 0.5f, 0.0f));
-      //Print("postupdate");
-        // this called every frame
-
-        */
+        //Conditions, etc...
         physicsWorld.DrawDebugGeometry(true);
     }
-
 }

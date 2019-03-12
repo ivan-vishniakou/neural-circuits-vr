@@ -1,4 +1,4 @@
-void SetupViewports(Scene scene, Vector3 initialPosition, Quaternion initialOrientation) {
+Node@ SetupViewports(Scene scene, Vector3 initialPosition, Quaternion initialOrientation) {
     /*
     This function sets up the cameras and viewports specifically for the given
     VR screen configuration. In this case, the VR screen consists of 4
@@ -11,6 +11,9 @@ void SetupViewports(Scene scene, Vector3 initialPosition, Quaternion initialOrie
     | vp1 | vp2 |     | vp3 | vp4 |
     |_____|_____|     |_____|_____|
        Screen 1          Screen 2
+
+
+    Returns reference to a node containing all the cameras.
     */
     renderer.numViewports = 4;
 
@@ -36,7 +39,6 @@ void SetupViewports(Scene scene, Vector3 initialPosition, Quaternion initialOrie
     rigidBody.collisionLayer = 1;
     CollisionShape@ collider = subjectNode.CreateComponent("CollisionShape");
     collider.SetBox(Vector3(1.4f,0.4f,1.4f));
-    SubscribeToEvent(subjectNode, "NodeCollision", "HandleNodeCollision");
 
     Node@ cam1 = subjectNode.CreateChild("Camera_1");
     Node@ cam2 = subjectNode.CreateChild("Camera_2");
@@ -86,29 +88,6 @@ void SetupViewports(Scene scene, Vector3 initialPosition, Quaternion initialOrie
     vp = Viewport(scene, cam4.GetComponent("Camera"),
       IntRect(graphics.width*3/4, 0, graphics.width, graphics.height));
     renderer.viewports[3] = vp;
-}
 
-
-void HandleNodeCollision(StringHash eventType, VariantMap& eventData)
-{
-    Print("collision");
-    //VectorBuffer contacts = eventData["Contacts"].GetBuffer();
-    /*
-    while (!contacts.eof)
-    {
-        Vector3 contactPosition = contacts.ReadVector3();
-        Vector3 contactNormal = contacts.ReadVector3();
-        float contactDistance = contacts.ReadFloat();
-        float contactImpulse = contacts.ReadFloat();
-
-        // If contact is below node center and mostly vertical, assume it's a ground contact
-        if (contactPosition.y < (node.position.y + 1.0f))
-        {
-            float level = Abs(contactNormal.y);
-            if (level > 0.75)
-                onGround = true;
-        }
-    }*/
-
-
+    return subjectNode;
 }
