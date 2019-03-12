@@ -30,6 +30,9 @@ void SetupViewports(Scene scene, Vector3 initialPosition, Quaternion initialOrie
     */
     RigidBody@ rigidBody = subjectNode.CreateComponent("RigidBody");
     rigidBody.mass = 1.0;
+    rigidBody.angularFactor = Vector3(0.0, 0.0, 0.0);
+    rigidBody.linearFactor = Vector3(1.0, 0.0, 1.0);
+    rigidBody.linearDamping = 10000.0;
     rigidBody.collisionLayer = 1;
     CollisionShape@ collider = subjectNode.CreateComponent("CollisionShape");
     collider.SetBox(Vector3(1.4f,0.4f,1.4f));
@@ -105,6 +108,7 @@ void HandleNodeCollision(StringHash eventType, VariantMap& eventData)
             if (level > 0.75)
                 onGround = true;
         }
-    }
-    */
+    }*/
+
+
 }

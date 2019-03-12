@@ -64,9 +64,13 @@ void Environment3D::Start()
 
 	ScriptInstance* arenaScript = scene_->CreateComponent<ScriptInstance>();
 	arenaScript->CreateObject(cache->GetResource<ScriptFile>(startupScriptPath_), "Arena");
-
-	arenaScript->Execute("void Initialize()");
+	arenaScript->SetEnabled(true);
+	//arenaScript->Execute("void Initialize()");
 	cameraNode_ = scene_->GetChild("Subject");
+	 
+
+	//arenaScript->Execute("void Initialize()");
+	//std::cout << arenaScript->GetAttribute("test").ToString().CString() << std::endl;
 	
 	SubscribeToEvent(E_BEGINFRAME, URHO3D_HANDLER(Environment3D, HandleBeginFrame));
 	SubscribeToEvent(E_KEYDOWN, URHO3D_HANDLER(Environment3D, HandleKeyDown));
@@ -132,18 +136,18 @@ void Environment3D::HandleKeyDown(StringHash eventType, VariantMap& eventData)
 void  Environment3D::HandleUpdate(StringHash eventType, VariantMap& eventData)
 {
 	
-	float timeStep = eventData[Update::P_TIMESTEP].GetFloat();
+	float timeStep = eventData[Update::P_TIMESTEP].GetFloat(); 
 	//framecount_++;
 	//time_ += timeStep;
 	//timeStep = 0.005;
 	// Movement speed as world units per second
-	float MOVE_SPEED = 10.0f;
+	float MOVE_SPEED = 50.0f; 
 	// Mouse sensitivity as degrees per pixel
 	const float MOUSE_SENSITIVITY = 0.1f;
 
 	Input* input = GetSubsystem<Input>();
-
-	Vector3 prevPos = cameraNode_->GetPosition();
+	
+	Vector3 prevPos = cameraNode_->GetPosition(); 
 	prevPos.y_ = 0.2;
 	cameraNode_->SetPosition(prevPos);
 
@@ -155,7 +159,7 @@ void  Environment3D::HandleUpdate(StringHash eventType, VariantMap& eventData)
 		cameraNode_->Translate(Vector3(-1, 0, 0)*MOVE_SPEED*timeStep);
 	if (input->GetKeyDown('D'))
 		cameraNode_->Translate(Vector3(1, 0, 0)*MOVE_SPEED*timeStep);
-
+		   
 	cv::Vec3f delta;
 	Vector3 tmp;
 	/*
