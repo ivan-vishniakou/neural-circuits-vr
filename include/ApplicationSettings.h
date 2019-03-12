@@ -7,10 +7,10 @@
 //#include <iostream>
 //#include <string>
 //#include <opencv2/core.hpp>
-#include <ConcurrentQueue.h>
+//#include <ConcurrentQueue.h>
 
-typedef ConcurrentQueue<cv::Vec3f> TrackingQueue;		//used in tracking
-typedef ConcurrentQueue<cv::Vec4f> CalibrationQueue;	//used in calibration
+//typedef ConcurrentQueue<cv::Vec3f> TrackingQueue;		//used in tracking
+//typedef ConcurrentQueue<cv::Vec4f> CalibrationQueue;	//used in calibration
 
 
 template<typename T>

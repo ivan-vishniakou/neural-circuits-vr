@@ -1,7 +1,5 @@
 #pragma once
-//#include <pylon/PylonIncludes.h>
-//#include <opencv2/core.hpp>
-#include "ApplicationSettings.h"
+#include "stdafx.h"
 
 class ImageAcquisition
 {

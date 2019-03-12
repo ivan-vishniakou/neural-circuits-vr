@@ -1,17 +1,8 @@
 #pragma once
-#include "ApplicationSettings.h"
+
+#include "stdafx.h"
+
 #include "ImageAcquisition.h"
-#include "BallTracking.h"
-#include "ControlFlags.h"
-
-#include <pylon/PylonIncludes.h>
-#include <pylon/AviCompressionOptions.h>
-#include <pylon/PylonGUI.h>
-#include <pylon/usb/_BaslerUsbCameraParams.h>
-
-#include <opencv2/core/core.hpp>
-#include <opencv2/highgui/highgui.hpp>
-#include <opencv2/video/video.hpp>
 
 
 ImageAcquisition::ImageAcquisition()
@@ -39,7 +30,7 @@ std::vector<std::string> ImageAcquisition::listCameras() {
 			cameraNames.push_back(devices[i].GetUserDefinedName().c_str());
 		}
 	}
-	catch (const GenericException &e)
+	catch (const GenICam::GenericException &e)
 	{
 		// Error handling.
 		std::cerr << "An exception occurred." << std::endl
@@ -54,7 +45,7 @@ bool ImageAcquisition::softwareTrigger()
 		pCamera->ExecuteSoftwareTrigger();
 		return true;
 	}
-	catch (const GenericException &e)
+	catch (const GenICam::GenericException &e)
 	{
 		// Error handling.
 		std::cerr << "An exception occurred." << std::endl
@@ -111,7 +102,7 @@ bool ImageAcquisition::init(std::string cameraName)
 		std::cout << "Using device " << pCamera->GetDeviceInfo().GetModelName() << std::endl;
 		pCamera->MaxNumBuffer = 10;
 	}
-	catch (const GenericException &e)
+	catch (const GenICam::GenericException &e)
 	{
 		// Error handling.
 		std::cerr << "An exception occurred." << std::endl
@@ -188,7 +179,7 @@ bool ImageAcquisition::loadCameraSettings(std::string settingsFilename)
 				return false;
 			}
 		}
-		catch (const GenericException &e)
+		catch (const GenICam::GenericException &e)
 		{
 			// Error handling.
 			std::cerr << "An exception occurred." << std::endl
