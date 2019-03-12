@@ -17,7 +17,8 @@ class Arena : ScriptObject {
     void Start() {
         /*  This function is called on the startup of the arena.
             All arena objects are to be created here, events subscribed,
-        */  etc.
+            etc.
+        */
         Print("Creating stripe arena");
 
         scene.CreateComponent("DebugRenderer");
