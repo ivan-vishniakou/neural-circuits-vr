@@ -109,6 +109,6 @@ public:
 	BallTracking(bool enableVisualize, int mode);
 	BallTrackingParameters parameters;
 	cv::Mat debugPlot;
-	cv::Mat update(const cv::Mat& frame);
+	cv::Mat update(const cv::Mat& frame, float& fit_quality);
 	~BallTracking();
 };

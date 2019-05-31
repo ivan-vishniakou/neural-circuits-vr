@@ -11,18 +11,6 @@ BallTracking::BallTracking(bool enable_visualize = false, int mode = RotModel::M
 {
 	visualize = enable_visualize;
 	/*
-	Loading settings from config file
-	*/
-	/*
-	parameters.polarCenter.x = load_settings.pt.get<float>("tracking settings.ball_center_x");
-	parameters.polarCenter.y = load_settings.pt.get<float>("tracking settings.ball_center_y");
-	parameters.visibleBallRadius = load_settings.pt.get<float>("tracking settings.ball_radius");
-
-	parameters.calibrCXYrad = load_settings.pt.get<float>("tracking settings.c_xy_rad");
-	parameters.calibrCXYtan = load_settings.pt.get<float>("tracking settings.c_xy_tan");
-	parameters.calibrCZ = load_settings.pt.get<float>("tracking settings.c_z");
-	*/
-	/*
 	Setting up solver and its model
 	*/
 	prevFit = cv::Mat::zeros(1, pRotModel->getDims(), CV_64FC1);
@@ -32,12 +20,11 @@ BallTracking::BallTracking(bool enable_visualize = false, int mode = RotModel::M
 	pDhSolver->setFunction(pRotModel);
 	pDhSolver->setTermCriteria(cv::TermCriteria(cv::TermCriteria::EPS + cv::TermCriteria::MAX_ITER, 100, 0.001));
 	//cv::setNumThreads(10);
-	std::cout << "Threads: " << cv::getNumThreads()
-		<< ", CPUs: " << cv::getNumberOfCPUs() << std::endl;
+	std::cout << "Threads: " << cv::getNumThreads() << ", CPUs: " << cv::getNumberOfCPUs() << std::endl;
 }
 
 
-cv::Mat BallTracking::update(const cv::Mat& frame)
+cv::Mat BallTracking::update(const cv::Mat& frame, float& fit_quality)
 {
 	try
 	{
@@ -60,11 +47,9 @@ cv::Mat BallTracking::update(const cv::Mat& frame)
 		{
 			// first call when previous frame is not availible
 			prevFrame = currentFrame;
-
 			debugPlot = cv::Mat(cv::Size(currentFrame.rows, 100), CV_8UC3);
 			debugPlot.setTo(0);
 
-			//((TrackingQueue*)pResultOutputQueue)->push(cv::Vec3f(0, 0, 0));
 			return prevFit;
 		}
 		else
@@ -72,8 +57,6 @@ cv::Mat BallTracking::update(const cv::Mat& frame)
 			cv::Mat flow(prevFrame.size(), CV_32FC2);
 			flow.setTo(0.0);
 			cv::calcOpticalFlowFarneback(prevFrame, currentFrame, flow, 0.5, 2, 6, 2, 2, 1.7, 0);
-			//disOpticalFlow->calc(prevFrame, currentFrame, flow);
-			//std::cout << flow.rows << "  " << flow.cols << std::endl;
 			// average along radius in the ROI
 			cv::reduce(flow.colRange(parameters.roiDownscaledRhoMin, parameters.roiDownscaledRhoMax), flow, 1, cv::ReduceTypes::REDUCE_AVG);
 			cv::Mat uv[2];
@@ -84,6 +67,7 @@ cv::Mat BallTracking::update(const cv::Mat& frame)
 			pRotModel->setDataPoints(uv[0], uv[1]);
 			// fit function using previous result as initial guess, returns MSE
 			double res = pDhSolver->minimize(prevFit) / (float)currentFrame.rows;
+			fit_quality = res;
 			//prevFit is [amplitude, phase, offset_tan]
 			
 			debugPlot.setTo(0);
@@ -134,10 +118,6 @@ cv::Mat BallTracking::update(const cv::Mat& frame)
 				cv::line(frame, parameters.polarCenter, parameters.polarCenter + cv::Point2f(-dir.y, dir.x) * 3000, cv::Scalar(0));
 			}
 			*/
-			//((TrackingQueue*)pResultOutputQueue)->push(dir);
-			//std::cout << dir << " - " << cv::norm(dir) << std::endl;
-			//std::cout << prevFit.at<double>(0)/ prevFit.at<double>(1) << std::endl;
-
 			prevFrame = currentFrame;
 			return prevFit;
 		}
@@ -145,7 +125,8 @@ cv::Mat BallTracking::update(const cv::Mat& frame)
 	catch (const cv::Exception &e) {
 		std::cout << e.what() << std::endl;
 	}
-	return prevFit; //error
+	fit_quality = 999.9;
+	return prevFit;
 }
 
 
