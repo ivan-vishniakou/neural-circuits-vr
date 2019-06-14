@@ -31,7 +31,7 @@ public:
 	double calc(const double* x)const {
 		/*
 		Calculates SSE between actual and fitted optical flow distributions
-		x = [amplitude_rad_tan, offset_tan, phase_tan]
+		x = [amplitude_tan, offset_tan, phase_tan]
 		*/
 		float res = 0.0;
 

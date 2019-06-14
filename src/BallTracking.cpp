@@ -68,56 +68,24 @@ cv::Mat BallTracking::update(const cv::Mat& frame, float& fit_quality)
 			// fit function using previous result as initial guess, returns MSE
 			double res = pDhSolver->minimize(prevFit) / (float)currentFrame.rows;
 			fit_quality = res;
-			//prevFit is [amplitude, phase, offset_tan]
-			
-			debugPlot.setTo(0);
-			if (pRotModel->mode == RotModel::MODE_TRACKING) {
-				for (int i = 0; i < 140; i++) {
-					int y = (int)(50 - std::round(uv[0].at<float>(i, 0) * 20));
-					y = std::max(0, y);
-					debugPlot.at<cv::Vec3b>(y % 100, i) = cv::Vec3b(0, 0, 255);
 
-					y = (int)(50 - std::round(uv[1].at<float>(i, 0) * 20));
-					y = std::max(0, y);
-					debugPlot.at<cv::Vec3b>(y % 100, i) = cv::Vec3b(255, 0, 0);
-
-					y = (int)std::round(
-						(50 - std::sin(2 * 3.1415 / 140.0*(float)i + prevFit.at<double>(1))*prevFit.at<double>(0) * 20)
-					);
-					y = std::max(0, y);
-					debugPlot.at<cv::Vec3b>(y % 100, i) = cv::Vec3b(64, 64, 255);
-
-					//[amplitude_rad, amplitude_tan, offset_tan, phase]
-					y = (int)std::round(
-						(50 - (std::cos(2 * 3.1415 / 140.0*(float)i + prevFit.at<double>(1))*prevFit.at<double>(0) + prevFit.at<double>(2)) * 20)
-					);
-					y = std::max(0, y);
-					debugPlot.at<cv::Vec3b>(y % 100, i) = cv::Vec3b(255, 64, 64);
-
-				}
-			} else
-			//cv::imshow("debug", debugPlot);
-			
-
+			//prevFit is [amplitude, offset_tan, phase]
 			cv::Point3f dir(
-				std::cos(prevFit.at<double>(1)) * prevFit.at<double>(0) / parameters.calibrCXYtan,		// * 180 / 3.14,  //converts to degrees
-				-std::sin(prevFit.at<double>(1)) * prevFit.at<double>(0) / parameters.calibrCXYtan,		// * 180 / 3.14,
-				prevFit.at<double>(2) / parameters.calibrCZ		//*180/3.14
+				std::cos(prevFit.at<double>(2)) * prevFit.at<double>(0) / parameters.calibrCXYtan,
+				-std::sin(prevFit.at<double>(2)) * prevFit.at<double>(0) / parameters.calibrCXYtan,
+				prevFit.at<double>(1) / parameters.calibrCZ
 			);
-			/*
+			
 			if (visualize) {
-
 				// this outlines the optical flow ROI
 				cv::circle(frame, parameters.polarCenter, parameters.visibleBallRadius, cv::Scalar(255));
 				cv::circle(frame, parameters.polarCenter, parameters.visibleBallRadius*parameters.roiRhoMin / frame.size().width, cv::Scalar(100));
 				cv::circle(frame, parameters.polarCenter, parameters.visibleBallRadius*parameters.roiRhoMax / frame.size().width, cv::Scalar(100));
-
 				// this outlines the tracking ROI
 				cv::circle(frame, parameters.polarCenter, parameters.visibleBallRadius*(parameters.roiRhoMin + parameters.roiDownscaledRhoMin*(parameters.roiRhoMax - parameters.roiRhoMin) / parameters.roiDownscaledWidth) / frame.size().width, cv::Scalar(256));
 				cv::circle(frame, parameters.polarCenter, parameters.visibleBallRadius*(parameters.roiRhoMin + parameters.roiDownscaledRhoMax*(parameters.roiRhoMax - parameters.roiRhoMin) / parameters.roiDownscaledWidth) / frame.size().width, cv::Scalar(256));
 				cv::line(frame, parameters.polarCenter, parameters.polarCenter + cv::Point2f(-dir.y, dir.x) * 3000, cv::Scalar(0));
 			}
-			*/
 			prevFrame = currentFrame;
 			return prevFit;
 		}

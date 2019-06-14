@@ -45,7 +45,7 @@ void Environment3D::Setup()
 }  
 
 
-void Environment3D::Configure(char * startupScriptPath, int * controlFlags, TrackingQueue * trackingQueue) {
+void Environment3D::Configure(const char* startupScriptPath, int* controlFlags, TrackingQueue* trackingQueue) {
 	startupScriptPath_ = String(startupScriptPath);
 	controlFlags_ = controlFlags;
 	trackedBallDisplacements_ = trackingQueue;

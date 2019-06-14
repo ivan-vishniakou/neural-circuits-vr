@@ -21,7 +21,7 @@ public:
 	Environment3D(Context * context);
 
 	void Setup();
-	void Configure(char * startupScriptPath, int * controlFlags, TrackingQueue * trackingQueue);
+	void Configure(const char* startupScriptPath, int* controlFlags, TrackingQueue* trackingQueue);
 	void Start();
 	void Stop();
 	void HandleBeginFrame(StringHash eventType, VariantMap& eventData);
@@ -39,10 +39,4 @@ public:
 	
 	int framecount_;
 	float time_;
-	//SharedPtr<Text> text_;
-	//
-	///	SharedPtr<Node> arena_;
-
-
-	//std::shared_ptr<spdlog::logger> file_logger = spdlog::get("pose");
 };

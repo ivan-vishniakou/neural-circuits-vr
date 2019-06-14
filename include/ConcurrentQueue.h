@@ -67,6 +67,6 @@ public:
 
 };
 
-
-typedef ConcurrentQueue<cv::Vec3f> TrackingQueue;		//used in tracking
+//typedef ConcurrentQueue<cv::Vec4d> TimeXYZQueue;		//used in tracking + vr
+typedef ConcurrentQueue<cv::Vec4d> TrackingQueue;		//used in tracking
 typedef ConcurrentQueue<cv::Vec4f> CalibrationQueue;	//used in calibration
