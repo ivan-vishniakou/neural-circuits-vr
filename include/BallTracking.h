@@ -31,7 +31,7 @@ public:
 	double calc(const double* x)const {
 		/*
 		Calculates SSE between actual and fitted optical flow distributions
-		x = [amplitude, phase, offset_tan]
+		x = [amplitude_rad_tan, offset_tan, phase_tan]
 		*/
 		float res = 0.0;
 
@@ -39,18 +39,18 @@ public:
 #pragma omp parallel for// reduction(+ : res)
 			for (int i = 0; i < nPoints; i++) {
 				float r = pow(
-					radialFlow.at<float>(i) - (x[0] * sin(i*freq + x[1])),
+					radialFlow.at<float>(i) - (x[0] * sin(i*freq + x[2])),
 					2
 				);
 				r += pow(
-					tangenFlow.at<float>(i) - (x[2] + x[0] * cos(i*freq + x[1])),
+					tangenFlow.at<float>(i) - (x[1] + x[0] * cos(i*freq + x[2])),
 					2
 				);
 				res += r;
 			}
 		}
 		/*
-		x = [amplitude_rad, amplitude_tan, offset_tan, phase ]
+		x = [amplitude_rad, amplitude_tan, offset_tan, phase_tan]
 		*/
 		else {
 #pragma omp parallel for// reduction(+ : res)
