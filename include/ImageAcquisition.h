@@ -22,7 +22,7 @@ public:
 	bool init(std::string cameraName);
 	bool loadCameraSettings(std::string settingsFilename);
 	bool setupVideoRecording(char outputFileneame[]);
-	bool grabOne(cv::OutputArray frame);
+	bool grabOne(cv::OutputArray frame, uint64& timestamp);
 	~ImageAcquisition();
 };
 

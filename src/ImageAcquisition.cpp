@@ -1,7 +1,6 @@
 #pragma once
 
 #include "stdafx.h"
-
 #include "ImageAcquisition.h"
 
 
@@ -58,9 +57,7 @@ bool ImageAcquisition::waitTriggerReady()
 {
 	if (!pCamera->IsGrabbing()) {
 		pCamera->StartGrabbing(Pylon::GrabStrategy_OneByOne);
-		//std::cout << pCamera->GetNodeMap().GetNode("PylonIncludes") << std::endl;
 	}
-	//pCamera->GetNodeMap().GetNode(Pylon::acqui)
 	return pCamera->WaitForFrameTriggerReady(1500);
 }
 
@@ -113,53 +110,6 @@ bool ImageAcquisition::init(std::string cameraName)
 	cameraInitialized = true;
 	return true;
 }
-/*
-bool ImageAcquisition::init(std::vector<std::string> cameraNames)
-{
-Pylon::PylonInitialize();
-try
-{
-Pylon::CTlFactory& tlFactory = Pylon::CTlFactory::GetInstance();
-// Get all attached devices and exit application if no device is found.
-Pylon::DeviceInfoList_t devices;
-
-if (tlFactory.EnumerateDevices(devices) == 0)
-{
-throw RUNTIME_EXCEPTION("No camera present.");
-}
-
-Pylon::CInstantCameraArray acquisitionCameras(cameraNames.size());
-
-for (int cn = 0; cn < cameraNames.size(); cn++) {
-Pylon::String_t cam_name;
-for (int i = 0; i < devices.size(); i++) {
-if (devices[i].GetUserDefinedName() == cam_name)
-{
-std::cout << "Found camera \"" << cam_name << "\"" << std::endl;
-acquisitionCameras[cn].Attach(tlFactory.CreateDevice(devices[i]));
-}
-}
-}
-if (!pCamera) {
-std::cerr << "Camera \"" << cam_name << "\" not found. Terminating image acquisition." << std::endl;
-return 0;
-}
-acquisitionCameras[0].
-pFormatConverter = new Pylon::CImageFormatConverter();
-pCamera->Open();
-std::cout << "Using device " << pCamera->GetDeviceInfo().GetModelName() << std::endl;
-}
-catch (const GenericException &e)
-{
-// Error handling.
-std::cerr << "An exception occurred." << std::endl
-<< e.GetDescription() << std::endl;
-return false;
-}
-
-cameraInitialized = true;
-return true;
-}*/
 
 
 bool ImageAcquisition::loadCameraSettings(std::string settingsFilename)
@@ -242,7 +192,7 @@ bool ImageAcquisition::setupVideoRecording(char outputFileneame[])
 }
 
 
-bool ImageAcquisition::grabOne(cv::OutputArray frame) {
+bool ImageAcquisition::grabOne(cv::OutputArray frame, uint64& timestamp) {
 	if (!pCamera->IsGrabbing()) {
 		pCamera->StartGrabbing(Pylon::GrabStrategy_LatestImageOnly);
 	}
@@ -260,6 +210,7 @@ bool ImageAcquisition::grabOne(cv::OutputArray frame) {
 					CV_8UC1,
 					(uint8_t *)pylonImage.GetBuffer());
 				frame.assign(image);
+				timestamp = ptrGrabResult->GetTimeStamp();
 				return true;
 			}
 		}
