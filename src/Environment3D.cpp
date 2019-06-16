@@ -155,15 +155,23 @@ void  Environment3D::HandleUpdate(StringHash eventType, VariantMap& eventData)
 		cameraNode_->Translate(Vector3(-1, 0, 0)*MOVE_SPEED*timeStep);
 	if (input->GetKeyDown('D'))
 		cameraNode_->Translate(Vector3(1, 0, 0)*MOVE_SPEED*timeStep);
-		  
-	cv::Vec3f delta;
-	Vector3 tmp;
-	/*
-	while (trackedBallDisplacements->try_pop(delta)) {
-		tmp = Vector3(delta[0], delta[1], delta[2]);
-		cameraNode_->Translate(ballXYZtoArenaXYZ * tmp);
-		cameraNode_->Yaw(ballXYZtoArenaYaw.DotProduct(tmp));
-	}*/
+
+	Vector3 cam_pos = cameraNode_->GetPosition();
+	double tx, tz;
+	tx = cam_pos.x_;
+	tz = cam_pos.z_;
+	double ttheta = cameraNode_->GetRotation().EulerAngles().y_;
+
+	cv::Vec4d delta;
+	Vector3 ball_rot;
+	uint64 timestamp;
+	while (trackedBallDisplacements_->try_pop(delta)) {
+		ball_rot = Vector3(delta[1], delta[2], delta[3]);
+		std::memcpy(&timestamp, &delta[0], sizeof(double)); // TODO: find a better way to pas sthe timestamp here;
+		file_logger->info("{} {} {} {} {} {} {}", timestamp, ball_rot.x_, ball_rot.y_, ball_rot.z_, tx, tz, ttheta);
+		cameraNode_->Translate(ballXYZtoArenaXYZ_ * ball_rot);
+		cameraNode_->Yaw(ballXYZtoArenaYaw_.DotProduct(ball_rot));
+	}
 
 	/*
 	if (of_mutex->try_lock()) {
@@ -172,7 +180,7 @@ void  Environment3D::HandleUpdate(StringHash eventType, VariantMap& eventData)
 
 
 	if (GetSubsystem<Input>()->IsMouseVisible()) {
-
+	
 	if (std::abs(delta.x) > 1 || std::abs(delta.y) > 1 || std::abs(delta.z) > 1) {
 	std::cout << "DELTA too big " << delta.x << ", " << delta.y << ", " << delta.z <<  std::endl;
 	}
@@ -230,7 +238,7 @@ void  Environment3D::HandleUpdate(StringHash eventType, VariantMap& eventData)
 	cameraNode_->Pitch(pitch_);
 	}
 	*/
-	if (*controlFlags_ & 1) engine_->Exit();
+	if (*controlFlags_) engine_->Exit();
 }
 
 /**

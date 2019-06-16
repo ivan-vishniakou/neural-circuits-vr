@@ -16,6 +16,7 @@ private:
 	int* controlFlags_;
 	Matrix3 ballXYZtoArenaXYZ_;
 	Vector3 ballXYZtoArenaYaw_;
+	std::shared_ptr<spdlog::logger> file_logger = spdlog::get("track");
 
 public:
 	Environment3D(Context * context);
