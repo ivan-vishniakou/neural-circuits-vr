@@ -172,7 +172,8 @@ xcopy "$(SolutionDir)Data\*" "$(SolutionDir)CaesarVR\$(Configuration)\Data" /Y /
 xcopy "$(URHO3D_DIR)\bin\Urho3D.dll" "$(SolutionDir)CaesarVR\$(Configuration)" /Y /I
 xcopy "$(URHO3D_DIR)\share\Resources\Data\*" "$(SolutionDir)CaesarVR\$(Configuration)\Data" /Y /I /E
 xcopy "$(URHO3D_DIR)\share\Resources\CoreData\*" "$(SolutionDir)CaesarVR\$(Configuration)\CoreData" /Y /I /E
-xcopy "$(SolutionDir)Data\*" "$(SolutionDir)CaesarVR\$(Configuration)\Data" /Y /I /E</Command>
+xcopy "$(SolutionDir)Data\*" "$(SolutionDir)CaesarVR\$(Configuration)\Data" /Y /I /E
+xcopy "$(SolutionDir)Scripts" "$(SolutionDir)CaesarVR\$(Configuration)\Scripts" /Y /I /E</Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>
