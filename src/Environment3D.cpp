@@ -185,72 +185,6 @@ void  Environment3D::HandleUpdate(StringHash eventType, VariantMap& eventData)
 		cameraNode_->Translate(ballXYZtoArenaXYZ_ * ball_rot * gainWalk_);		// Transform ball xyz rots to arena motion
 		cameraNode_->Yaw(ballXYZtoArenaYaw_.DotProduct(ball_rot) * gainTurn_);	// Taking arena-specific gain into account
 	}
-
-	/*
-	if (of_mutex->try_lock()) {
-	//std::cout << "MU" << std::endl;
-	cv::Point3d delta(delta_pose->x, delta_pose->y, delta_pose->z);
-
-
-	if (GetSubsystem<Input>()->IsMouseVisible()) {
-	
-	if (std::abs(delta.x) > 1 || std::abs(delta.y) > 1 || std::abs(delta.z) > 1) {
-	std::cout << "DELTA too big " << delta.x << ", " << delta.y << ", " << delta.z <<  std::endl;
-	}
-	else {
-
-	cameraNode_->Translate(Vector3((-delta.z - delta.y)*(0.7071 * 0.006 * 500), 0, 0));
-	cameraNode_->Translate(Vector3(0, 0, (-delta.z + delta.y)*0.7071*0.006 * 500));
-	cameraNode_->Yaw(delta.x*180.0 / 3.14 * 1.0);
-
-	absolutePose.x += (-delta.z - delta.y)*(0.7071 * 0.006 * 500);
-	absolutePose.y += (-delta.z + delta.y)*0.7071*0.006 * 500;
-	absolutePose.z += delta.x*180.0 / 3.14 * 1.0;
-	}
-	}
-
-	delta_pose->x -= delta.x;
-	delta_pose->y -= delta.y;
-	delta_pose->z -= delta.z;
-	of_mutex->unlock();
-	Vector3 newPos = cameraNode_->GetPosition();
-
-	PhysicsRaycastResult result;
-	PhysicsWorld * pw = scene_->GetComponent<PhysicsWorld>();
-	pw->SphereCast(result, Ray(newPos, prevPos), 0.4, (newPos - prevPos).Length());
-	int count = 4;
-	while (result.body_ && count-- > 0) {
-	newPos = result.position_ + result.normal_*0.4011;
-	// +(newPos - prevPos) * rayDistance*0.5);
-	pw->SphereCast(result, Ray(newPos, prevPos), 0.4, (newPos - prevPos).Length());
-	}
-
-	//Grid_world_specific
-	newPos.x_ = std::fmod(newPos.x_, float(arena_period));//30
-	newPos.z_ = std::fmod(newPos.z_, float(arena_period));
-
-	cameraNode_->SetPosition(newPos);
-
-	}
-	else {
-	//std::cout << "MUTEX LOCKED FOR ENV3d" << std::endl;
-	}*/
-	/*
-	if (!GetSubsystem<Input>()->IsMouseVisible())
-	{
-	// Use this frame's mouse motion to adjust camera node yaw and pitch. Clamp the pitch between -90 and 90 degrees
-	IntVector2 mouseMove = input->GetMouseMove();
-	static float yaw_ = 0;
-	static float pitch_ = 0;
-	yaw_ += MOUSE_SENSITIVITY*mouseMove.x_;
-	//pitch_ += MOUSE_SENSITIVITY*mouseMove.y_;
-	//pitch_ = Clamp(pitch_, -90.0f, 90.0f);
-	// Reset rotation and set yaw and pitch again
-	cameraNode_->SetDirection(Vector3::FORWARD);
-	cameraNode_->Yaw(yaw_);
-	cameraNode_->Pitch(pitch_);
-	}
-	*/
 	if (*controlFlags_) engine_->Exit();
 }
 
@@ -332,13 +266,7 @@ void  Environment3D::HandleEndFrame(StringHash eventType, VariantMap& eventData)
 		}
 	}*/
 }
-/*
-void Environment3D::setControlsObject(int * pControlFlags, TrackingQueue* pTrackingQueue)
-{
-	controlFlags = pControlFlags;
-	trackedBallDisplacements = pTrackingQueue;
-}
-*/
+
 
 void Environment3D::HandleClientConnected(StringHash eventType, VariantMap& eventData)
 {
@@ -348,12 +276,4 @@ void Environment3D::HandleClientConnected(StringHash eventType, VariantMap& even
 	auto* newConnection = static_cast<Connection*>(eventData[P_CONNECTION].GetPtr());
 	newConnection->SetScene(scene_);
 
-	// Then create a controllable object for that client
-	//Node* newObject = CreateControllableObject();
-	//serverObjects_[newConnection] = newObject;
-
-	// Finally send the object's node ID using a remote event
-	//VariantMap remoteEventData;
-	//remoteEventData[P_ID] = newObject->GetID();
-	//newConnection->SendRemoteEvent(E_CLIENTOBJECTID, true, remoteEventData);
 }

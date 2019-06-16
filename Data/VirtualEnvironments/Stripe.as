@@ -28,7 +28,7 @@ class Arena : ScriptObject {
         Node@ zoneNode = scene.CreateChild("Zone");
         Zone@ zone = zoneNode.CreateComponent("Zone");
         zone.boundingBox = BoundingBox(-1000.0f, 1000.0f);
-        zone.fogColor = Color(1.0f,1.0f,1.0f);             //0.0f,0.0f,0.0f
+        zone.fogColor = Color(0.0f,0.0f,0.0f);             //1.0f,1.0f,1.0f for white background
         zone.ambientColor = Color(1.0f, 1.0f, 1.0f);
         zone.fogStart = 1000.0f;
         zone.fogEnd = 1000.0f;
@@ -41,10 +41,9 @@ class Arena : ScriptObject {
         node = scene.CreateChild("Pole1");
         node.scale = Vector3(14.0f, 500.0f, 14.0f);
         node.position = Vector3(0.0f, 0.0f, 20.0f);
-        node.Rotate(Quaternion(45.0f, Vector3(1.0f, 1.0f, 0.0f)));
         object = node.CreateComponent("StaticModel");
         object.model = cache.GetResource("Model", "Models/Cylinder.mdl");
-        object.material = cache.GetResource("Material", "Materials/Arena.xml");   //White.xml
+        object.material = cache.GetResource("Material", "Materials/White.xml");   //White.xml
 
         rigidBody = node.CreateComponent("RigidBody");      // Rigid body and
         rigidBody.collisionLayer = 1;                       // Collision shape
