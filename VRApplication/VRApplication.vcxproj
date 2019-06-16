@@ -75,12 +75,19 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(SolutionDir)\include;$(IncludePath)</IncludePath>
+    <SourcePath>$(SolutionDir)\src;$(SourcePath)</SourcePath>
+    <OutDir>$(SolutionDir)CaesarVR\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(SolutionDir)\include;$(IncludePath)</IncludePath>
+    <SourcePath>$(SolutionDir)\src;$(SourcePath)</SourcePath>
+    <OutDir>$(SolutionDir)CaesarVR\$(Configuration)\</OutDir>
+    <PreBuildEventUseInBuild>true</PreBuildEventUseInBuild>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -98,17 +105,28 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>Create</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(PYLON_DEV_DIR)\include;$(OPENCV_DIR)\build\include;$(BOOST_DIR);$(URHO3D_DIR)\include;$(URHO3D_DIR)\include\Urho3D\ThirdParty;$(SPDLOG_DIR)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(PYLON_DEV_DIR)\lib\x64;$(BOOST_DIR)\lib64-msvc-14.1;$(URHO3D_DIR)\lib;$(OPENCV_DIR)\build\x64\vc15\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Urho3D.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy "$(SolutionDir)Config" "$(SolutionDir)CaesarVR\$(Configuration)\Config" /Y /I /E
+xcopy "$(URHO3D_DIR)\bin\Urho3D.dll" "$(SolutionDir)CaesarVR\$(Configuration)" /Y /I
+xcopy "$(URHO3D_DIR)\share\Resources\Data\*" "$(SolutionDir)CaesarVR\$(Configuration)\Data" /Y /I /E
+xcopy "$(URHO3D_DIR)\share\Resources\CoreData\*" "$(SolutionDir)CaesarVR\$(Configuration)\CoreData" /Y /I /E
+xcopy "$(SolutionDir)Data\*" "$(SolutionDir)CaesarVR\$(Configuration)\Data" /Y /I /E</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -130,7 +148,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>Create</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -138,26 +156,58 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(PYLON_DEV_DIR)\include;$(OPENCV_DIR)\build\include;$(BOOST_DIR);$(URHO3D_DIR)\include;$(URHO3D_DIR)\include\Urho3D\ThirdParty;$(SPDLOG_DIR)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(PYLON_DEV_DIR)\lib\x64;$(BOOST_DIR)\lib64-msvc-14.1;$(URHO3D_DIR)\lib;$(OPENCV_DIR)\build\x64\vc15\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opencv_world401.lib;Urho3D.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy "$(SolutionDir)Config" "$(SolutionDir)CaesarVR\$(Configuration)\Config" /Y /I /E
+xcopy "$(URHO3D_DIR)\bin\Urho3D.dll" "$(SolutionDir)CaesarVR\$(Configuration)" /Y /I
+xcopy "$(URHO3D_DIR)\share\Resources\Data\*" "$(SolutionDir)CaesarVR\$(Configuration)\Data" /Y /I /E
+xcopy "$(URHO3D_DIR)\share\Resources\CoreData\*" "$(SolutionDir)CaesarVR\$(Configuration)\CoreData" /Y /I /E
+xcopy "$(SolutionDir)Data\*" "$(SolutionDir)CaesarVR\$(Configuration)\Data" /Y /I /E
+xcopy "$(SolutionDir)Scripts" "$(SolutionDir)CaesarVR\$(Configuration)\Scripts" /Y /I /E</Command>
+    </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>
+      </Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="stdafx.h" />
-    <ClInclude Include="targetver.h" />
+    <ClCompile Include="..\src\BallTracking.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\src\ConfigFile.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\src\ConfigManager.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\src\Environment3D.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\src\ImageAcquisition.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\src\stdafx.cpp" />
+    <ClCompile Include="VRApplication.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="stdafx.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="VRApplication.cpp" />
+    <ClInclude Include="..\include\ApplicationSettings.h" />
+    <ClInclude Include="..\include\BallTracking.h" />
+    <ClInclude Include="..\include\ConcurrentQueue.h" />
+    <ClInclude Include="..\include\ConfigFile.h" />
+    <ClInclude Include="..\include\ConfigManager.h" />
+    <ClInclude Include="..\include\Environment3D.h" />
+    <ClInclude Include="..\include\ImageAcquisition.h" />
+    <ClInclude Include="..\include\stdafx.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

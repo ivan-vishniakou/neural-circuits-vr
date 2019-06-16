@@ -5,22 +5,40 @@ VisualStudioVersion = 15.0.27703.2000
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VRApplication", "VRApplication\VRApplication.vcxproj", "{8E97F339-A000-4847-85D2-A9F4C58AED11}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{B92CA0E4-DBB9-4D92-BB77-B107AF501376}"
+	ProjectSection(SolutionItems) = preProject
+		src\BallTracking.cpp = src\BallTracking.cpp
+		src\Environment3D.cpp = src\Environment3D.cpp
+		src\ImageAcquisition.cpp = src\ImageAcquisition.cpp
+		src\stdafx.cpp = src\stdafx.cpp
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "include", "include", "{79A03750-D8D7-4F07-AA33-AD2530159E52}"
+	ProjectSection(SolutionItems) = preProject
+		include\ApplicationSettings.h = include\ApplicationSettings.h
+		include\BallTracking.h = include\BallTracking.h
+		include\ConcurrentQueue.h = include\ConcurrentQueue.h
+		include\Environment3D.h = include\Environment3D.h
+		include\ImageAcquisition.h = include\ImageAcquisition.h
+		include\stdafx.h = include\stdafx.h
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BallFootageTracking", "BallFootageTracking\BallFootageTracking.vcxproj", "{753E815B-1D54-486F-8B52-8A35E50182A1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
-		Debug|x86 = Debug|x86
 		Release|x64 = Release|x64
-		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{8E97F339-A000-4847-85D2-A9F4C58AED11}.Debug|x64.ActiveCfg = Debug|x64
 		{8E97F339-A000-4847-85D2-A9F4C58AED11}.Debug|x64.Build.0 = Debug|x64
-		{8E97F339-A000-4847-85D2-A9F4C58AED11}.Debug|x86.ActiveCfg = Debug|Win32
-		{8E97F339-A000-4847-85D2-A9F4C58AED11}.Debug|x86.Build.0 = Debug|Win32
 		{8E97F339-A000-4847-85D2-A9F4C58AED11}.Release|x64.ActiveCfg = Release|x64
 		{8E97F339-A000-4847-85D2-A9F4C58AED11}.Release|x64.Build.0 = Release|x64
-		{8E97F339-A000-4847-85D2-A9F4C58AED11}.Release|x86.ActiveCfg = Release|Win32
-		{8E97F339-A000-4847-85D2-A9F4C58AED11}.Release|x86.Build.0 = Release|Win32
+		{753E815B-1D54-486F-8B52-8A35E50182A1}.Debug|x64.ActiveCfg = Debug|x64
+		{753E815B-1D54-486F-8B52-8A35E50182A1}.Debug|x64.Build.0 = Debug|x64
+		{753E815B-1D54-486F-8B52-8A35E50182A1}.Release|x64.ActiveCfg = Release|x64
+		{753E815B-1D54-486F-8B52-8A35E50182A1}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
