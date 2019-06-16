@@ -9,7 +9,7 @@ using namespace Urho3D;
 
 Environment3D::Environment3D(Context * context) : Application(context), framecount_(0), time_(0), absolutePose(0, 0, 0), ballXYZtoArenaXYZ_(Matrix3::ZERO), ballXYZtoArenaYaw_(Vector3::FORWARD)
 {
-	//arena_period = 30;
+
 }
 
 
@@ -67,7 +67,20 @@ void Environment3D::Start()
 	arenaScript->CreateObject(cache->GetResource<ScriptFile>(startupScriptPath_), "Arena");
 	arenaScript->SetEnabled(true);
 	cameraNode_ = scene_->GetChild("Subject");
-	 
+	
+	/*
+	Get arena-specific walking and turning gain
+	*/
+	//std::cout << arenaScript->
+
+	Variant arenaGainTurn = arenaScript->GetAttribute("turningGain");
+	Variant arenaGainWalk = arenaScript->GetAttribute("walkingGain");
+
+	if (!arenaGainTurn.IsEmpty()) gainTurn_ = arenaGainTurn.GetFloat();
+	if (!arenaGainWalk.IsEmpty()) gainWalk_ = arenaGainWalk.GetFloat();
+
+	std::cout << "Reading gain from arena script: turning, walking = " << gainTurn_ << " " << gainWalk_ << std::endl;
+
 	SubscribeToEvent(E_BEGINFRAME, URHO3D_HANDLER(Environment3D, HandleBeginFrame));
 	SubscribeToEvent(E_KEYDOWN, URHO3D_HANDLER(Environment3D, HandleKeyDown));
 	SubscribeToEvent(E_UPDATE, URHO3D_HANDLER(Environment3D, HandleUpdate));
@@ -135,7 +148,7 @@ void  Environment3D::HandleUpdate(StringHash eventType, VariantMap& eventData)
 	float timeStep = eventData[Update::P_TIMESTEP].GetFloat(); 
 	//framecount_++;
 	//time_ += timeStep;
-	//timeStep = 0.005;
+	//timeStep = 0.005; 
 	// Movement speed as world units per second
 	float MOVE_SPEED = 50.0f; 
 	// Mouse sensitivity as degrees per pixel
@@ -169,8 +182,8 @@ void  Environment3D::HandleUpdate(StringHash eventType, VariantMap& eventData)
 		ball_rot = Vector3(delta[1], delta[2], delta[3]);
 		std::memcpy(&timestamp, &delta[0], sizeof(double)); // TODO: find a better way to pas sthe timestamp here;
 		file_logger->info("{} {} {} {} {} {} {}", timestamp, ball_rot.x_, ball_rot.y_, ball_rot.z_, tx, tz, ttheta);
-		cameraNode_->Translate(ballXYZtoArenaXYZ_ * ball_rot);
-		cameraNode_->Yaw(ballXYZtoArenaYaw_.DotProduct(ball_rot));
+		cameraNode_->Translate(ballXYZtoArenaXYZ_ * ball_rot * gainWalk_);		// Transform ball xyz rots to arena motion
+		cameraNode_->Yaw(ballXYZtoArenaYaw_.DotProduct(ball_rot) * gainTurn_);	// Taking arena-specific gain into account
 	}
 
 	/*

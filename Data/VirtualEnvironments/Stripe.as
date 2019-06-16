@@ -4,7 +4,7 @@ class Arena : ScriptObject {
     // Keep the class name ("Arena") as it is used to call the initializer
 
     float turningGain = 1.0f;    // Gain parameters for turning
-    float walkingGain = 1.0f;    // And walking motion
+    float walkingGain = 0.0f;    // And walking motion
 
     Vector3 initialPosition = Vector3(0.0f, 0.5f, 0.0f);  // initial position
     Quaternion initialOrientation = Quaternion(           // and orientation

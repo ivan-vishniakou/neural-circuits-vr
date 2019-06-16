@@ -16,6 +16,8 @@ private:
 	int* controlFlags_;
 	Matrix3 ballXYZtoArenaXYZ_;
 	Vector3 ballXYZtoArenaYaw_;
+	float gainTurn_ = 1.0;
+	float gainWalk_ = 1.0;
 	std::shared_ptr<spdlog::logger> file_logger = spdlog::get("track");
 
 public:
