@@ -1,0 +1,6 @@
+
+<renderpath>
+    <command type="quad" tag="DitherINV" vs="DitherINV" ps="DitherINV" output="viewport">
+        <texture unit="diffuse" name="viewport" />
+    </command>
+</renderpath>

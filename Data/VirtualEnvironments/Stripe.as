@@ -44,7 +44,7 @@ class Arena : ScriptObject {
         node.Rotate(Quaternion(45.0f, Vector3(1.0f, 1.0f, 0.0f)));
         object = node.CreateComponent("StaticModel");
         object.model = cache.GetResource("Model", "Models/Cylinder.mdl");
-        object.material = cache.GetResource("Material", "Materials/Black.xml");   //White.xml
+        object.material = cache.GetResource("Material", "Materials/Arena.xml");   //White.xml
 
         rigidBody = node.CreateComponent("RigidBody");      // Rigid body and
         rigidBody.collisionLayer = 1;                       // Collision shape
@@ -92,6 +92,6 @@ class Arena : ScriptObject {
     void PostUpdate(float timeStep)
     {
         //Conditions, etc...
-        physicsWorld.DrawDebugGeometry(true);
+        //physicsWorld.DrawDebugGeometry(true);
     }
 }

@@ -75,6 +75,8 @@ Node@ SetupViewports(Scene scene, Vector3 initialPosition, Quaternion initialOri
 
     vp = Viewport(scene, cam1.GetComponent("Camera"),
       IntRect(0, 0, graphics.width*1/4, graphics.height));
+    // Dithering shader applied to the render path
+    vp.renderPath.Append(cache.GetResource("XMLFile", "PostProcess/Dither.xml"));
     renderer.viewports[0] = vp;
 
     vp = Viewport(scene, cam2.GetComponent("Camera"),
