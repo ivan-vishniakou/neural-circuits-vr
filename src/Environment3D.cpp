@@ -234,11 +234,9 @@ void  Environment3D::HandlePostRenderUpdate(StringHash eventType, VariantMap & e
 */
 void  Environment3D::HandleEndFrame(StringHash eventType, VariantMap& eventData)
 {
-	// We really don't have anything useful to do here for this example.
-	// Probably shouldn't be subscribing to events we don't care about.
-	//Vector3 cam_pos = cameraNode_->GetPosition();
-	//file_logger->info("{} {} {} {} {} {}", absolutePose.x, absolutePose.y, absolutePose.z, cam_pos.x_, cam_pos.z_, cameraNode_->GetRotation().EulerAngles().y_);
-	/*
+	// Broadcasts camera position and orientation for all socket clients. Used for VR state monitoring.
+	Vector3 cam_pos = cameraNode_->GetPosition();
+	
 	auto* network = GetSubsystem<Network>();
 	if (network->IsServerRunning())
 	{
@@ -247,12 +245,6 @@ void  Environment3D::HandleEndFrame(StringHash eventType, VariantMap& eventData)
 		if (connections.Size() > 0) {
 			Urho3D::VectorBuffer data;
 			Urho3D::String msg = "P";
-			msg.Append(Urho3D::String(absolutePose.x));
-			msg.Append(", ");
-			msg.Append(Urho3D::String(absolutePose.y));
-			msg.Append(", ");
-			msg.Append(Urho3D::String(absolutePose.z));
-			msg.Append(", ");
 
 			msg.Append(Urho3D::String(cam_pos.x_));
 			msg.Append(", ");
@@ -264,7 +256,7 @@ void  Environment3D::HandleEndFrame(StringHash eventType, VariantMap& eventData)
 			data.WriteString(msg);
 			network->BroadcastMessage(654, false, true, data);
 		}
-	}*/
+	}
 }
 
 
@@ -275,5 +267,4 @@ void Environment3D::HandleClientConnected(StringHash eventType, VariantMap& even
 	// When a client connects, assign to scene to begin scene replication
 	auto* newConnection = static_cast<Connection*>(eventData[P_CONNECTION].GetPtr());
 	newConnection->SetScene(scene_);
-
 }
