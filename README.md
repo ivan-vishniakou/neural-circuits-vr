@@ -17,4 +17,4 @@ Pointed at with ```BOOST_DIR``` environment variable
 Pointed at with ```SPDLOG_DIR``` environment variable
 
 ## Binaries
-Compiled executable can be found [here](https://www.dropbox.com/s/t2tm57fk4ukl18k/nc-vr.zip?dl=0).
+Compiled executable can be found [here](https://www.dropbox.com/s/dzjy1h9hg6xm2a7/nc-vr-2020-07-16.zip?dl=0).
