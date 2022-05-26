@@ -2,7 +2,7 @@ from __future__ import print_function
 import cv2
 import numpy as np
 import os
-import tkFileDialog, tkMessageBox
+from tkinter import filedialog, messagebox
 
 
 def lin_regress(x, y):
@@ -14,7 +14,7 @@ def get_track(filename):
         lines = f.readlines()
     print(lines[0])
     lines = np.array([
-        map(float, _.split(' ')[-5:])
+        [*map(float, _.split(' ')[-5:])]
         for _ in lines[1:]])
     return lines
 
@@ -43,7 +43,7 @@ def get_tracker_parameters(footage_file):
         while (cap.isOpened()):
             ret, frame = cap.read()
             if ret == True:
-                frame = frame[:,:]
+                frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
                 cv2.circle(frame,(
                     int(round(center_x_y_rad[0])),
                     int(round(center_x_y_rad[1]))),
@@ -98,7 +98,7 @@ CxyRad=100.31
 CxyTan=76.85
 Cz=20.63
         """.split('\n')
-        lines = map(lambda l: l+'\n', lines)
+        lines = [*map(lambda l: l+'\n', lines)]
     #print(lines)
     for _ in range(len(lines)):
         if "BallCenterX" in lines[_]:
@@ -145,8 +145,8 @@ Cz=1.0
 def main():
     print("Welcome to the 2-camera calibration procedure")
     print("Select main (ball tracking) camera footage")
-    tkMessageBox.showinfo("Select calibration footage", "Select the footage from the main tracking camera")
-    main_footage_file = tkFileDialog.askopenfilename(initialfile="D:\\test.avi")
+    messagebox.showinfo("Select calibration footage", "Select the footage from the main tracking camera")
+    main_footage_file = filedialog.askopenfilename()
     main_track_params = get_tracker_parameters(main_footage_file)
     print('main: ', main_track_params)
     if main_track_params is not None:
@@ -155,8 +155,8 @@ def main():
         print("Could not get tracking parameters")
         return
     print("Select secondary camera footage")
-    tkMessageBox.showinfo("Select calibration footage", "Select the footage from the secondary camera")
-    secondary_footage_file = tkFileDialog.askopenfilename(initialdir=main_footage_file)
+    messagebox.showinfo("Select calibration footage", "Select the footage from the secondary camera")
+    secondary_footage_file = filedialog.askopenfilename(initialdir=main_footage_file)
     secondary_track_params = get_tracker_parameters(secondary_footage_file)
     print('secondary: ', secondary_track_params)
     if secondary_track_params is not None:
@@ -170,10 +170,18 @@ def main():
     '''
     main_track = get_track(main_track_file)
     secondary_track = get_track(secondary_track_file)
+    print("number of lines of main track = ", len(main_track))
+    print("number of lines of secondary track = ", len(secondary_track))
+
+    min_lines = min(len(main_track), len(secondary_track))
+    print("number of lines to be used = ", min_lines)
+    main_track = main_track[0:min_lines, :]
+    secondary_track = secondary_track[0:min_lines, :]
 
     fit_quality_threshold = np.mean(main_track[:, 0])
-    filter = np.where((np.abs(main_track[:, 0]) < fit_quality_threshold) & (np.abs(secondary_track[:, 0]) < fit_quality_threshold))
-    main_track, secondary_track = main_track[filter], secondary_track[filter]
+    filter = np.squeeze(np.where((np.abs(main_track[:, 0]) < fit_quality_threshold) & (np.abs(secondary_track[:, 0]) < fit_quality_threshold)))
+    
+    main_track, secondary_track = main_track[filter, :], secondary_track[filter, :]
 
     main_tracking_cam_resolution_h = main_track_params[3]
     secondary_tracking_cam_resolution_h = secondary_track_params[3]
@@ -191,7 +199,7 @@ def main():
 
     print(c_xy_rad, c_xy_tan, c_z)
 
-    mbox = tkMessageBox.askquestion('Calibration complete. Save parameters?',
+    mbox = messagebox.askquestion('Calibration complete. Save parameters?',
             'Calibration complete. The factors found are: \nc_xy_rad={}\nc_xy_tan={}\n c_z={}\nSave them for VR application?'.format(
                 c_xy_rad, c_xy_tan, c_z
             ),
@@ -209,7 +217,7 @@ def main():
         print("No :(")
 
 
-    #secondary_footage_file = tkFileDialog.askopenfilename(initialdir=main_footage_file)
+    #secondary_footage_file = filedialog.askopenfilename(initialdir=main_footage_file)
     #main_footage_file = 'D:\\test.avi'
     print(main_footage_file)
 
